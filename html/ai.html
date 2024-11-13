@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html class="sl-theme-dark" lang="en">
+	<head>
+		<!-- initialize theme vars
+    https://coolors.co/10002b-240046-3c096c-5a189a-7b2cbf-9d4edd-c77dff-e0aaff -->
+
+		<!-- initialize externals -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+		<script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
+
+		<!-- initialize my stuff -->
+		<script src="/js/all.min.js"></script>
+		<script src="/js/main.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" integrity="sha512-jB0TkTBeQC9ZSkBqDhdmfTv1qdfbWpGE72yJ/01Srq6hEzZIz2xkz1e57p9ai7IeHMwEG7HpzG6NdptChif5Pg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<link rel="stylesheet" href="/style.css" />
+
+		<!-- seo + other things -->
+		<title>AI | Selenite</title>
+		<link rel="icon" href="/favicon.ico" />
+		<script>
+			let chatHistory = [];
+			function sendMessage(isUser, message) {
+				chatHistory.push({ role: isUser ? "user" : "assistant", content: message });
+				let messageElmt = document.createElement("message");
+				messageElmt.classList = isUser ? "user" : "bot";
+				messageElmt.innerHTML = DOMPurify.sanitize(marked.parse(message));
+				document.getElementById("messages").appendChild(messageElmt);
+				document.getElementById("messages").scroll({
+					top: document.getElementById("messages").scrollHeight,
+					behavior: "smooth",
+				});
+			}
+			async function handleAI(message) {
+				return await (
+					await fetch("/api/ai/chat", {
+						method: "POST",
+						body: JSON.stringify({
+							model: document.getElementById("models").value,
+							messages: JSON.stringify(chatHistory),
+						}),
+						headers: {
+							"Content-type": "application/json; charset=UTF-8",
+						},
+					})
+				).text();
+			}
+			document.addEventListener("DOMContentLoaded", () => {
+				document.getElementById("chatbox").addEventListener("keypress", async (e) => {
+					if (e.key == "Enter" && document.getElementById("chatbox").value !== "") {
+						let model = "";
+						let message = document.getElementById("chatbox").value;
+						document.getElementById("chatbox").value = "";
+						sendMessage(1, message);
+						sendMessage(0, await handleAI(message, model));
+					}
+				});
+			});
+		</script>
+	</head>
+	<alerts> </alerts>
+	<body id="noscroll">
+		<header>
+			<a href="/index.html">Home</a>
+			<a href="/bookmarklets.html">Bookmarklets</a>
+			<a href="/projects.html">Games</a>
+			<a href="/apps.html">Apps</a>
+			<a href="/settings.html">Settings</a>
+			<a id="blank" href="#">Open Blank</a>
+			<a href="/u/" class="usericon"><img src="/img/user.svg" /></a>
+		</header>
+		<script></script>
+		<main>
+			<h1>AI Chat Bot</h1>
+			<p>Powered by <a href="https://groq.com">Groq</a>.</p>
+			<p class="evensmaller">Messages are logged for quality assurance. Don't type any personal information.</p>
+			<select id="models">
+				<option>Select a model:</option>
+				<option value="1b">LLAMA 3.2 1B (Speed: 100%, Quality: 40%)</option>
+				<option value="3b">LLAMA 3.2 3B (Speed: 90%, Quality: 50%)</option>
+				<option value="11b">LLAMA 3.2 11B (Speed: 60%, Quality: 70%, image support)</option>
+				<option value="8b">LLAMA 3.1 8B (Speed: 85%, Quality: 55%)</option>
+				<option value="70b">LLAMA 3.1 70B (Speed: 30%, Quality: 90%)</option>
+			  </select>
+			<div id="chat">
+				<div id="messages">
+				</div>
+				<div class="messagebox">
+					<input type="text" placeholder="Send a message..." id="chatbox" />
+				</div>
+			</div>
+		</main>
+		<footer class="noscroll">
+			<a href="https://gitlab.com/skysthelimit.dev/selenite">Source</a>
+			<a href="https://discord.gg/7jyufnwJNf">Discord</a>
+			<a href="/suggest.html">Suggestions & Bugs</a>
+			<a href="/contact.html">Contact</a>
+			<a href="/support.html">Donate</a>
+			<a href="/about.html">About</a>
+		</footer>
+	</body>
+</html>

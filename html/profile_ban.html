@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="sl-theme-dark" lang="en">
+	<head>
+		<!-- initialize theme vars
+    https://coolors.co/10002b-240046-3c096c-5a189a-7b2cbf-9d4edd-c77dff-e0aaff -->
+
+		<meta content="{{ name }}" property="og:title" />
+		<meta content="{{ about_none }}" property="og:description" />
+		<meta content="{{ user_pfp }}" property="og:image" />
+		<meta content="#c77dff" data-react-helmet="true" name="theme-color" />
+		<!-- initialize externals -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+		<script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
+
+		<!-- initialize my stuff -->
+		<script src="/js/all.min.js"></script>
+		<script src="/js/main.js"></script>
+
+		<link rel="stylesheet" href="/style.css" />
+
+		<title>Banned Profile | Selenite</title>
+		<link rel="icon" href="/favicon.ico" />
+		<script>
+			function delete_cookie(name, path, domain) {
+				document.cookie = name + "=" + (path ? ";path=" + path : "") + (domain ? ";domain=" + domain : "") + ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+			}
+			document.addEventListener("DOMContentLoaded", () => {
+				document.getElementById("logout").addEventListener("click", () => {
+					delete_cookie("token", "/", location.hostname);
+					location.reload();
+				});
+			});
+		</script>
+	</head>
+	<alerts> </alerts>
+	<body id="noscroll" class="profile">
+		<header>
+			<a href="/index.html">Home</a>
+			<a href="/bookmarklets.html">Bookmarklets</a>
+			<a href="/projects.html">Games</a>
+			<a href="/apps.html">Apps</a>
+			<a href="/settings.html">Settings</a>
+			<a id="blank" href="#">Open Blank</a>
+			<a href="/u/" class="usericon"><img src="/img/user.svg" /></a>
+		</header>
+		<main>
+			<h2>You have been banned: {{ reason }}</h2>
+			<button id="logout">Log out</button>
+		</main>
+		<footer class="noscroll">
+			<a href="https://gitlab.com/skysthelimit.dev/selenite">Source</a>
+			<a href="https://discord.gg/7jyufnwJNf">Discord</a>
+			<a href="/suggest.html">Suggestions & Bugs</a>
+			<a href="/contact.html">Contact</a>
+			<a href="/support.html">Donate</a>
+			<a href="/about.html">About</a>
+		</footer>
+	</body>
+</html>
